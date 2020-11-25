@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Setter from './Setter';
+import Timer from './Timer';
 
 const TwentyfiveFive = () => {
   const [breakTime, setBreakTime] = useState(5);
@@ -31,6 +32,7 @@ const TwentyfiveFive = () => {
 
   return (
     <div>
+      <Timer />
       <Setter
         type={'break'}
         time={breakTime}
