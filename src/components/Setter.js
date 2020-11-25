@@ -1,6 +1,6 @@
 import SetterBtn from './SetterBtn';
 
-const Setter = ({ type, time, increment, decrement, foo, bar }) => {
+const Setter = ({ type, time, increment, decrement }) => {
   return (
     <div id={`${type}-label`}>
       <SetterBtn
@@ -8,8 +8,6 @@ const Setter = ({ type, time, increment, decrement, foo, bar }) => {
         type={type}
         task={'increment'}
         action={increment}
-        foo={foo}
-        bar={bar}
       />
       <h3 id={`${type}-length`}>{time}</h3>
       <SetterBtn
