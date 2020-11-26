@@ -5,6 +5,7 @@ import Timer from './Timer';
 const TwentyfiveFive = () => {
   const [breakTime, setBreakTime] = useState(5);
   const [sessionTime, setSessionTime] = useState(25);
+  const [paused, setPaused] = useState(true);
 
   const increment = (task) => {
     if (task === 'break') {

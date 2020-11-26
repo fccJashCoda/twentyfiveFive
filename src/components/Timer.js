@@ -1,4 +1,7 @@
+import { useState } from 'react';
+
 const Timer = () => {
+  const [paused, setPaused] = useState(true);
   return (
     <div id="timer-label">
       <p>Session</p>
