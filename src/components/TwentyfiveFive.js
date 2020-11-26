@@ -3,26 +3,29 @@ import Setter from './Setter';
 import Timer from './Timer';
 
 const TwentyfiveFive = () => {
+  const date = new Date(0, 0, 0, 0, 25, 0);
   const [breakTime, setBreakTime] = useState(5);
   const [sessionTime, setSessionTime] = useState(25);
   const [paused, setPaused] = useState(true);
-  const [seconds, setSeconds] = useState(60);
-  const [minutes, setMinutes] = useState('');
+  const [time, setTime] = useState(
+    date.toLocaleTimeString(navigator.language, {
+      minute: '2-digit',
+      second: '2-digit',
+    })
+  );
 
   useEffect(() => {
     let timer;
 
     const countDown = () => {
-      setMinutes(sessionTime);
-      setSeconds((prevState) => {
-        if (prevState === 60) {
-          setMinutes((prevState) => prevState - 1);
-        }
-        if (prevState === 1) {
-          return 60;
-        }
-        return prevState - 1;
-      });
+      date.setSeconds(date.getSeconds() - 1);
+      setTime(
+        date.toLocaleTimeString(navigator.language, {
+          minute: '2-digit',
+          second: '2-digit',
+        })
+      );
+      console.log(date);
     };
 
     if (!paused) {
@@ -79,9 +82,8 @@ const TwentyfiveFive = () => {
   return (
     <div>
       {paused && <p>paused</p>}
-      <p>{seconds}</p>
-      <p>{minutes}</p>
-      <Timer reset={reset} startStop={startStop} />
+      <p>{time}</p>
+      <Timer reset={reset} startStop={startStop} paused={paused} date={date} />
       <Setter
         type={'break'}
         time={breakTime}
