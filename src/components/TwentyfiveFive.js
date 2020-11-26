@@ -3,7 +3,7 @@ import Setter from './Setter';
 import Timer from './Timer';
 
 const TwentyfiveFive = () => {
-  const date = new Date(0, 0, 0, 0, 25, 0);
+  let date = new Date(0, 0, 0, 0, 25, 0);
   const [breakTime, setBreakTime] = useState(5);
   const [sessionTime, setSessionTime] = useState(25);
   const [paused, setPaused] = useState(true);
@@ -19,13 +19,19 @@ const TwentyfiveFive = () => {
 
     const countDown = () => {
       date.setSeconds(date.getSeconds() - 1);
-      setTime(
-        date.toLocaleTimeString(navigator.language, {
+      setTime((prevState) => {
+        if (prevState === '24:55') {
+          date = new Date(0, 0, 0, 0, 25, 0);
+          console.log('shabang');
+        }
+        prevState = date.toLocaleTimeString(navigator.language, {
           minute: '2-digit',
           second: '2-digit',
-        })
-      );
-      console.log(date);
+        });
+        console.log(prevState);
+        console.log(typeof prevState);
+        return prevState;
+      });
     };
 
     if (!paused) {
