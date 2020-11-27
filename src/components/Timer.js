@@ -57,7 +57,7 @@ const Timer = ({ startStop, reset, baseTime, paused }) => {
 
       return () => clearInterval(timer);
     }
-  }, [paused, baseTime]);
+  }, [paused]);
 
   console.log('outside date', date);
   return (
