@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+const Timer = ({ startStop, reset, time, sessionTime, breakTime, state }) => {
+  const clock =
+    sessionTime === 60 ? '60:00' : breakTime === 60 ? '60:00' : time;
 
-const Timer = ({ startStop, reset, time, state }) => {
   return (
     <div id="timer-label">
       <p>{state}</p>
-      <h3 id="time-left">{time}</h3>
+      <h3 id="time-left">{clock}</h3>
       <button id="start_stop" onClick={startStop}>
         Start
       </button>

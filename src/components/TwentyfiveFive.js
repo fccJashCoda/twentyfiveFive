@@ -13,6 +13,27 @@ const TwentyfiveFive = () => {
   // const [date, setDate] = useState(new Date(0, 0, 0, 0, 0, 5, 0));
   const [time, setTime] = useState('');
 
+  class Clock {
+    constructor(minutes, seconds = '00') {
+      this.minutes = minutes;
+      this.seconds = seconds;
+    }
+
+    tickDown() {
+      if (this.seconds === '00') {
+        this.minutes -= 1;
+      }
+      this.seconds =
+        this.seconds === '00'
+          ? '59'
+          : String(this.seconds - 1).padStart(2, '0');
+    }
+
+    display() {
+      return `${this.minutes}:${this.seconds}`;
+    }
+  }
+
   const reset = () => {
     setBreakTime(5);
     setSessionTime(25);
@@ -63,8 +84,11 @@ const TwentyfiveFive = () => {
 
   useEffect(() => {
     let timer;
+    let seconds = '00';
 
     const countDown = () => {
+      seconds = seconds === '00' ? '59' : String(seconds - 1).padStart(2, '0');
+      console.log(seconds);
       date.setSeconds(date.getSeconds() - 1);
       setTime((prevState) => {
         if (prevState === '00:01') {
@@ -128,7 +152,14 @@ const TwentyfiveFive = () => {
   return (
     <div>
       {paused && <p>paused</p>}
-      <Timer reset={reset} startStop={startStop} time={time} state={state} />
+      <Timer
+        reset={reset}
+        startStop={startStop}
+        time={time}
+        state={state}
+        sessionTime={sessionTime}
+        breakTime={breakTime}
+      />
       <Setter
         type={'break'}
         time={breakTime}
