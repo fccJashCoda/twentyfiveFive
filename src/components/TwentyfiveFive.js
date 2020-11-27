@@ -6,13 +6,14 @@ const TwentyfiveFive = () => {
   const [breakTime, setBreakTime] = useState(5);
   const [sessionTime, setSessionTime] = useState(25);
   const [paused, setPaused] = useState(true);
-  const [state, setState] = useState('session');
+  const [state, setState] = useState('Session');
+  const [value, setValue] = useState(sessionTime);
 
   const reset = () => {
     setBreakTime(5);
     setSessionTime(25);
     setPaused(true);
-    setState('session');
+    setState('Session');
     setDate((prevState) => {
       prevState = new Date(0, 0, 0, 0, sessionTime, 0);
 
@@ -33,10 +34,6 @@ const TwentyfiveFive = () => {
   const [date, setDate] = useState(new Date(0, 0, 0, 0, sessionTime, 0));
   const [time, setTime] = useState('');
 
-  const changeState = () => {
-    setState((prevState) => (prevState === 'session' ? 'break' : 'session'));
-  };
-
   useEffect(() => {
     const base = state === 'session' ? sessionTime : breakTime;
 
@@ -55,16 +52,26 @@ const TwentyfiveFive = () => {
   }, [state]);
   // }, [sessionTime]);
 
+  let base = sessionTime;
   useEffect(() => {
     let timer;
 
     const countDown = () => {
+      console.log('original base', base);
       date.setSeconds(date.getSeconds() - 1);
       console.log('inside date', date);
       setTime((prevState) => {
         console.log('state', state);
-        if (prevState === '00:00') {
-          changeState();
+        if (prevState === '00:01') {
+          setValue((prevState) => {
+            prevState = prevState === sessionTime ? breakTime : sessionTime;
+            setDate(() => new Date(0, 0, 0, 0, prevState, 1));
+            setState((prev) => (prev === 'Session' ? 'Break' : 'Session'));
+            return prevState;
+          });
+          console.log('value', value);
+
+          // changeState();
           console.log('newstate', state);
         }
         prevState = date.toLocaleTimeString(navigator.language, {
@@ -82,11 +89,8 @@ const TwentyfiveFive = () => {
     return () => clearInterval(timer);
   }, [paused, date, state]);
 
+  // button logic
   const increment = (task) => {
-    // there is a bug where when the user keeps the mousebutton down
-    // but leaves the button area, the count keeps incrementing forever
-    // until he hovers back on it with the mousebutton down
-    // could be fixed by checking mouse position relative to the button?
     if (paused) {
       if (task === 'break') {
         setBreakTime((prevState) =>
@@ -103,12 +107,12 @@ const TwentyfiveFive = () => {
   const decrement = (task) => {
     if (paused) {
       if (task === 'break') {
-        if (breakTime > 0)
+        if (breakTime > 1)
           setBreakTime((prevState) =>
             prevState > 0 ? prevState - 1 : prevState
           );
       } else {
-        if (sessionTime > 0)
+        if (sessionTime > 1)
           setSessionTime((prevState) =>
             prevState > 0 ? prevState - 1 : prevState
           );
@@ -119,7 +123,7 @@ const TwentyfiveFive = () => {
   return (
     <div>
       {paused && <p>paused</p>}
-      <Timer reset={reset} startStop={startStop} time={time} />
+      <Timer reset={reset} startStop={startStop} time={time} state={state} />
       <Setter
         type={'break'}
         time={breakTime}

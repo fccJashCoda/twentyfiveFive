@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const Timer = ({ startStop, reset, time }) => {
+const Timer = ({ startStop, reset, time, state }) => {
   // let date = new Date(0, 0, 0, 0, baseTime, 0);
   // const [date, setDate] = useState(new Date(0, 0, 0, 0, baseTime, 0));
   // const [time, setTime] = useState('');
@@ -55,7 +55,7 @@ const Timer = ({ startStop, reset, time }) => {
 
   return (
     <div id="timer-label">
-      <p>Session</p>
+      <p>{state}</p>
       <h3 id="time-left">{time}</h3>
       <button id="start_stop" onClick={startStop}>
         Start
