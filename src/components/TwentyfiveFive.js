@@ -60,32 +60,31 @@ const TwentyfiveFive = () => {
   // }, [state]);
   // }, [sessionTime]);
 
-  let base = sessionTime;
   useEffect(() => {
     let timer;
 
     const countDown = () => {
-      console.log('original base', base);
       date.setSeconds(date.getSeconds() - 1);
-      console.log('inside date', date);
       setTime((prevState) => {
-        console.log('state', state);
         if (prevState === '00:01') {
           // setValue(prevState === sessionTime ? breakTime : sessionTime);
-          setState((prev) => (prev === 'Session' ? 'Break' : 'Session'));
           console.log('switch');
+          // setState((prev) => (prev === 'Session' ? 'Break' : 'Session'));
           // setDate(() => new Date(0, 0, 0, 0, 0, value + 1));
 
           setValue((prevState) => {
+            console.log('state', state);
+            console.log('prevState', prevState);
+            console.log('sessionTime', sessionTime);
+            console.log('prevState === sessionTime', prevState === sessionTime);
             prevState = prevState === sessionTime ? breakTime : sessionTime;
-            setState((prev) => (prev === 'Session' ? 'Break' : 'Session'));
-            setDate(() => new Date(0, 0, 0, 0, 0, value + 1));
+            setDate(() => new Date(0, 0, 0, 0, 0, prevState + 1));
+            // setDate(() => new Date(0, 0, 0, 0, 0, value + 1));
             return prevState;
           });
-          console.log('value', value);
-
-          // changeState();
-          console.log('newstate', state);
+        }
+        if (time === '00:00') {
+          setState((prev) => (prev === 'Session' ? 'Break' : 'Session'));
         }
         prevState = date.toLocaleTimeString(navigator.language, {
           minute: '2-digit',
