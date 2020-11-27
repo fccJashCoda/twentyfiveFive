@@ -21,9 +21,8 @@ const SetterBtn = ({ id, type, task, action }) => {
         action(type);
         loop(500);
       });
-
-      return () => clearTimeout(timer);
     }
+    return () => clearTimeout(timer);
   }, [mouseDown]);
 
   return (

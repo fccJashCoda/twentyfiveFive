@@ -4,18 +4,83 @@ import Timer from './Timer';
 
 const TwentyfiveFive = () => {
   const [breakTime, setBreakTime] = useState(5);
-  const [sessionTime, setSessionTime] = useState(10);
+  const [sessionTime, setSessionTime] = useState(25);
   const [paused, setPaused] = useState(true);
+  const [state, setState] = useState('session');
 
   const reset = () => {
     setBreakTime(5);
     setSessionTime(25);
     setPaused(true);
+    setState('session');
+    setDate((prevState) => {
+      prevState = new Date(0, 0, 0, 0, sessionTime, 0);
+
+      setTime(
+        prevState.toLocaleTimeString(navigator.language, {
+          minute: '2-digit',
+          second: '2-digit',
+        })
+      );
+      return prevState;
+    });
   };
 
   const startStop = () => {
     setPaused(!paused);
   };
+
+  const [date, setDate] = useState(new Date(0, 0, 0, 0, sessionTime, 0));
+  const [time, setTime] = useState('');
+
+  const changeState = () => {
+    setState((prevState) => (prevState === 'session' ? 'break' : 'session'));
+  };
+
+  useEffect(() => {
+    const base = state === 'session' ? sessionTime : breakTime;
+
+    setDate((prevState) => {
+      prevState = new Date(0, 0, 0, 0, base, 0);
+
+      setTime(
+        prevState.toLocaleTimeString(navigator.language, {
+          minute: '2-digit',
+          second: '2-digit',
+        })
+      );
+      return prevState;
+    });
+    console.log(date);
+  }, [state]);
+  // }, [sessionTime]);
+
+  useEffect(() => {
+    let timer;
+
+    const countDown = () => {
+      date.setSeconds(date.getSeconds() - 1);
+      console.log('inside date', date);
+      setTime((prevState) => {
+        console.log('state', state);
+        if (prevState === '00:00') {
+          changeState();
+          console.log('newstate', state);
+        }
+        prevState = date.toLocaleTimeString(navigator.language, {
+          minute: '2-digit',
+          second: '2-digit',
+        });
+
+        return prevState;
+      });
+    };
+
+    if (!paused) {
+      timer = setInterval(countDown, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [paused, date, state]);
 
   const increment = (task) => {
     // there is a bug where when the user keeps the mousebutton down
@@ -54,12 +119,7 @@ const TwentyfiveFive = () => {
   return (
     <div>
       {paused && <p>paused</p>}
-      <Timer
-        reset={reset}
-        startStop={startStop}
-        paused={paused}
-        baseTime={sessionTime}
-      />
+      <Timer reset={reset} startStop={startStop} time={time} />
       <Setter
         type={'break'}
         time={breakTime}
