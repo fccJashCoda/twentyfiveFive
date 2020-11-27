@@ -3,16 +3,11 @@ import { useState, useEffect } from 'react';
 const Timer = ({ startStop, reset, baseTime, paused }) => {
   // let date = new Date(0, 0, 0, 0, baseTime, 0);
   const [date, setDate] = useState(new Date(0, 0, 0, 0, baseTime, 0));
-  const [time, setTime] = useState(
-    date.toLocaleTimeString(navigator.language, {
-      minute: '2-digit',
-      second: '2-digit',
-    })
-  );
+  const [time, setTime] = useState('');
 
   useEffect(() => {
     setDate((prevState) => {
-      prevState = new Date(0, 0, 0, 0, baseTime, 0);
+      prevState = new Date(0, 0, 0, 0, 0, baseTime, 0);
 
       setTime(
         prevState.toLocaleTimeString(navigator.language, {
