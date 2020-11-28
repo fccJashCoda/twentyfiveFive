@@ -152,8 +152,7 @@ const TwentyfiveFive = () => {
         startStop={startStop}
         time={time}
         state={state}
-        sessionTime={sessionTime}
-        breakTime={breakTime}
+        paused={paused}
       />
       <Setter
         type={'break'}

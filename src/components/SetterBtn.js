@@ -10,9 +10,6 @@ const SetterBtn = ({ id, type, task, action }) => {
         onClick={() => action(type)}
         id={id}
       ></i>
-      {/* <button id={id} onClick={() => action(type)}>
-        {task}
-      </button> */}
     </>
   );
 };

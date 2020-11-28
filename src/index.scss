@@ -13,6 +13,8 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  background: #1b1b32;
+  color: #fff;
 }
 
 code {
@@ -26,7 +28,36 @@ code {
 }
 
 #timer-label {
+  p {
+    text-align: center;
+    font-weight: bold;
+  }
+
   #time-left {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 3em;
+  }
+
+  .btn {
+    display: inline-block;
+    cursor: pointer;
+    background: none;
+    // background: #fff;
+    border: none;
+    width: 50%;
+    color: #fff;
+    font-size: 1em;
+    padding: 1em 0;
+    text-align: center;
+
+    &:hover {
+      background: #33335f;
+    }
+    &:active {
+      background: #33335f69;
+    }
   }
 
   #start_stop {
@@ -38,15 +69,29 @@ code {
 .setterWrapper {
   h3 {
     text-align: center;
+    font-size: 2em;
+    margin-top: 0.3em;
+    margin-bottom: 0;
+  }
+
+  p {
+    text-align: center;
+    margin-top: 0;
   }
   .setterBtn {
     font-size: 3em;
-    background: red;
     display: block;
     padding: 0 1em;
     border-radius: 4px;
     color: #fff;
     cursor: pointer;
+
+    &:hover {
+      background: #33335f;
+    }
+    &:active {
+      background: #33335f69;
+    }
   }
 
   .increment {
