@@ -2,6 +2,21 @@ import { useState, useEffect } from 'react';
 import Setter from './Setter';
 import Timer from './Timer';
 
+function Clock(minutes, seconds = '00') {
+  this.minutes = minutes;
+  this.seconds = seconds;
+  this.tickDown = function () {
+    if (this.seconds === '00') {
+      this.minutes -= 1;
+    }
+    this.seconds =
+      this.seconds === '00' ? '59' : String(this.seconds - 1).padStart(2, '0');
+  };
+  this.display = function () {
+    return `${this.minutes}:${this.seconds}`;
+  };
+}
+
 const TwentyfiveFive = () => {
   const [breakTime, setBreakTime] = useState(5);
   const [sessionTime, setSessionTime] = useState(25);
@@ -9,47 +24,31 @@ const TwentyfiveFive = () => {
   // const [sessionTime, setSessionTime] = useState(5);
   const [paused, setPaused] = useState(true);
   const [state, setState] = useState('Session');
-  const [date, setDate] = useState(new Date(0, 0, 0, 0, 5, 0));
+  const [date, setDate] = useState(new Clock(0, sessionTime));
   // const [date, setDate] = useState(new Date(0, 0, 0, 0, 0, 5, 0));
   const [time, setTime] = useState('');
-
-  class Clock {
-    constructor(minutes, seconds = '00') {
-      this.minutes = minutes;
-      this.seconds = seconds;
-    }
-
-    tickDown() {
-      if (this.seconds === '00') {
-        this.minutes -= 1;
-      }
-      this.seconds =
-        this.seconds === '00'
-          ? '59'
-          : String(this.seconds - 1).padStart(2, '0');
-    }
-
-    display() {
-      return `${this.minutes}:${this.seconds}`;
-    }
-  }
+  // const [time, setTime] = useState('');
 
   const reset = () => {
     setBreakTime(5);
-    setSessionTime(25);
+    setSessionTime(10);
     setPaused(true);
     setState('Session');
     setDate((prevState) => {
-      prevState = new Date(0, 0, 0, 0, sessionTime, 0);
-
-      setTime(
-        prevState.toLocaleTimeString(navigator.language, {
-          minute: '2-digit',
-          second: '2-digit',
-        })
-      );
-      return prevState;
+      prevState = new Clock(sessionTime);
+      setTime(prevState.display());
     });
+    // setDate((prevState) => {
+    //   prevState = new Date(0, 0, 0, 0, sessionTime, 0);
+
+    //   setTime(
+    //     prevState.toLocaleTimeString(navigator.language, {
+    //       minute: '2-digit',
+    //       second: '2-digit',
+    //     })
+    //   );
+    //   return prevState;
+    // });
   };
 
   const startStop = () => {
@@ -57,53 +56,59 @@ const TwentyfiveFive = () => {
   };
 
   useEffect(() => {
-    setTime(
-      date.toLocaleTimeString(navigator.language, {
-        minute: '2-digit',
-        second: '2-digit',
-      })
-    );
+    // setTime((prevState) => {
+    //   const clock = new Clock(sessionTime);
+    //   return clock;
+    // });
+    // setTime(
+    //   date.toLocaleTimeString(navigator.language, {
+    //     minute: '2-digit',
+    //     second: '2-digit',
+    //   })
+    // );
   }, []);
 
   useEffect(() => {
     const base = state === 'Session' ? sessionTime : breakTime;
     console.log('current state when setting time', state);
     setDate((prevState) => {
-      prevState = new Date(0, 0, 0, 0, base, 0);
+      prevState = new Clock(0, base);
       // prevState = new Date(0, 0, 0, 0, 0, base, 0);
 
-      setTime(
-        prevState.toLocaleTimeString(navigator.language, {
-          minute: '2-digit',
-          second: '2-digit',
-        })
-      );
+      setTime(prevState.display());
       return prevState;
     });
+    // setDate((prevState) => {
+    //   prevState = new Date(0, 0, 0, 0, base, 0);
+    //   // prevState = new Date(0, 0, 0, 0, 0, base, 0);
+
+    //   setTime(
+    //     prevState.toLocaleTimeString(navigator.language, {
+    //       minute: '2-digit',
+    //       second: '2-digit',
+    //     })
+    //   );
+    //   return prevState;
+    // });
   }, [sessionTime, breakTime]);
 
   useEffect(() => {
     let timer;
-    let seconds = '00';
 
     const countDown = () => {
-      seconds = seconds === '00' ? '59' : String(seconds - 1).padStart(2, '0');
-      console.log(seconds);
-      date.setSeconds(date.getSeconds() - 1);
+      date.tickDown();
+
       setTime((prevState) => {
         if (prevState === '00:01') {
           console.log('switch');
           let base = state === 'Session' ? breakTime : sessionTime;
           // setDate(() => new Date(0, 0, 0, 0, 0, base + 1));
-          setDate(() => new Date(0, 0, 0, 0, base, 1));
+          setDate(() => new Clock(base));
         }
         if (time === '00:00') {
           setState((prev) => (prev === 'Session' ? 'Break' : 'Session'));
         }
-        prevState = date.toLocaleTimeString(navigator.language, {
-          minute: '2-digit',
-          second: '2-digit',
-        });
+        prevState = date.display();
 
         return prevState;
       });
@@ -117,6 +122,41 @@ const TwentyfiveFive = () => {
       };
     }
   }, [paused, date, state]);
+  // useEffect(() => {
+  //   let timer;
+  //   let seconds = '00';
+
+  //   const countDown = () => {
+  //     seconds = seconds === '00' ? '59' : String(seconds - 1).padStart(2, '0');
+  //     console.log(seconds);
+  //     date.setSeconds(date.getSeconds() - 1);
+  //     setTime((prevState) => {
+  //       if (prevState === '00:01') {
+  //         console.log('switch');
+  //         let base = state === 'Session' ? breakTime : sessionTime;
+  //         // setDate(() => new Date(0, 0, 0, 0, 0, base + 1));
+  //         setDate(() => new Date(0, 0, 0, 0, base, 1));
+  //       }
+  //       if (time === '00:00') {
+  //         setState((prev) => (prev === 'Session' ? 'Break' : 'Session'));
+  //       }
+  //       prevState = date.toLocaleTimeString(navigator.language, {
+  //         minute: '2-digit',
+  //         second: '2-digit',
+  //       });
+
+  //       return prevState;
+  //     });
+  //   };
+
+  //   if (!paused) {
+  //     timer = setInterval(countDown, 1000);
+  //     return () => {
+  //       console.log('clearing timer');
+  //       clearInterval(timer);
+  //     };
+  //   }
+  // }, [paused, date, state]);
 
   // button logic
   const increment = (task) => {
