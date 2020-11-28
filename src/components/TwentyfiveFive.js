@@ -3,11 +3,11 @@ import Setter from './Setter';
 import Timer from './Timer';
 
 function Clock(minutes, seconds = '00') {
-  this.minutes = minutes;
+  this.minutes = String(minutes).padStart(2, '0');
   this.seconds = String(seconds).padStart(2, '0');
   this.tickDown = function () {
     if (this.seconds === '00') {
-      this.minutes -= 1;
+      this.minutes = String(minutes - 1).padStart(2, '0');
     }
     this.seconds =
       this.seconds === '00' ? '59' : String(this.seconds - 1).padStart(2, '0');
@@ -19,12 +19,12 @@ function Clock(minutes, seconds = '00') {
 
 const TwentyfiveFive = () => {
   const [breakTime, setBreakTime] = useState(5);
-  const [sessionTime, setSessionTime] = useState(2);
+  const [sessionTime, setSessionTime] = useState(25);
   // const [breakTime, setBreakTime] = useState(3);
   // const [sessionTime, setSessionTime] = useState(5);
   const [paused, setPaused] = useState(true);
   const [state, setState] = useState('Session');
-  const [date, setDate] = useState(new Clock(0, sessionTime));
+  const [date, setDate] = useState(new Clock(sessionTime));
   // const [date, setDate] = useState(new Date(0, 0, 0, 0, 0, 5, 0));
   const [time, setTime] = useState('');
   // const [time, setTime] = useState('');
@@ -36,7 +36,15 @@ const TwentyfiveFive = () => {
     setState('Session');
     setDate((prevState) => {
       prevState = new Clock(sessionTime);
-      setTime(prevState.display());
+      setTime((prevTime) => {
+        prevTime = prevState.display();
+        console.log(prevTime);
+
+        return prevTime;
+      });
+      console.log(prevState);
+      console.log(prevState.display());
+      return prevState;
     });
     // setDate((prevState) => {
     //   prevState = new Date(0, 0, 0, 0, sessionTime, 0);
@@ -72,7 +80,7 @@ const TwentyfiveFive = () => {
     const base = state === 'Session' ? sessionTime : breakTime;
     console.log('current state when setting time', state);
     setDate((prevState) => {
-      prevState = new Clock(0, base);
+      prevState = new Clock(base);
       // prevState = new Date(0, 0, 0, 0, 0, base, 0);
 
       setTime(prevState.display());
@@ -100,13 +108,13 @@ const TwentyfiveFive = () => {
 
       setTime((prevState) => {
         console.log('odal', prevState);
-        if (prevState === '0:01') {
+        if (prevState === '00:01') {
           console.log('switch');
           // setDate(() => new Date(0, 0, 0, 0, 0, base + 1));
           let base = state === 'Session' ? breakTime : sessionTime;
-          setDate(() => new Clock(0, base + 1));
+          setDate(() => new Clock(base, 1));
         }
-        if (prevState === '0:00') {
+        if (prevState === '00:00') {
           console.log('0:00 change');
           setState((prev) => (prev === 'Session' ? 'Break' : 'Session'));
         }
