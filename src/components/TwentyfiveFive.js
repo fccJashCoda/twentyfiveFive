@@ -135,12 +135,17 @@ const TwentyfiveFive = () => {
   };
 
   return (
-    <div>
-      {paused && <p>paused</p>}
+    <>
       <audio
         src="https://s3.amazonaws.com/freecodecamp/drums/Chord_1.mp3"
         type="audio/mp3"
         id="beep"
+      />
+      <Setter
+        type={'session'}
+        time={sessionTime}
+        increment={increment}
+        decrement={decrement}
       />
       <Timer
         reset={reset}
@@ -156,13 +161,7 @@ const TwentyfiveFive = () => {
         increment={increment}
         decrement={decrement}
       />
-      <Setter
-        type={'session'}
-        time={sessionTime}
-        increment={increment}
-        decrement={decrement}
-      />
-    </div>
+    </>
   );
 };
 

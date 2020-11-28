@@ -2,8 +2,9 @@ import SetterBtn from './SetterBtn';
 
 const Setter = ({ type, time, increment, decrement }) => {
   return (
-    <div id={`${type}-label`}>
+    <div className="setterWrapper" id={`${type}-label`}>
       <SetterBtn
+        className="setterBtn increment"
         id={`${type}-increment`}
         type={type}
         task={'increment'}
@@ -11,6 +12,7 @@ const Setter = ({ type, time, increment, decrement }) => {
       />
       <h3 id={`${type}-length`}>{time}</h3>
       <SetterBtn
+        className="setterBtn decrement"
         id={`${type}-decrement`}
         type={type}
         task={'decrement'}
