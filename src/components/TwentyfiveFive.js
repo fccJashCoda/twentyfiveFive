@@ -4,7 +4,7 @@ import Timer from './Timer';
 
 function Clock(minutes, seconds = '00') {
   this.minutes = minutes;
-  this.seconds = seconds;
+  this.seconds = String(seconds).padStart(2, '0');
   this.tickDown = function () {
     if (this.seconds === '00') {
       this.minutes -= 1;
@@ -19,7 +19,7 @@ function Clock(minutes, seconds = '00') {
 
 const TwentyfiveFive = () => {
   const [breakTime, setBreakTime] = useState(5);
-  const [sessionTime, setSessionTime] = useState(25);
+  const [sessionTime, setSessionTime] = useState(2);
   // const [breakTime, setBreakTime] = useState(3);
   // const [sessionTime, setSessionTime] = useState(5);
   const [paused, setPaused] = useState(true);
@@ -31,7 +31,7 @@ const TwentyfiveFive = () => {
 
   const reset = () => {
     setBreakTime(5);
-    setSessionTime(10);
+    setSessionTime(25);
     setPaused(true);
     setState('Session');
     setDate((prevState) => {
@@ -99,13 +99,15 @@ const TwentyfiveFive = () => {
       date.tickDown();
 
       setTime((prevState) => {
-        if (prevState === '00:01') {
+        console.log('odal', prevState);
+        if (prevState === '0:01') {
           console.log('switch');
-          let base = state === 'Session' ? breakTime : sessionTime;
           // setDate(() => new Date(0, 0, 0, 0, 0, base + 1));
-          setDate(() => new Clock(base));
+          let base = state === 'Session' ? breakTime : sessionTime;
+          setDate(() => new Clock(0, base + 1));
         }
-        if (time === '00:00') {
+        if (prevState === '0:00') {
+          console.log('0:00 change');
           setState((prev) => (prev === 'Session' ? 'Break' : 'Session'));
         }
         prevState = date.display();
@@ -122,6 +124,7 @@ const TwentyfiveFive = () => {
       };
     }
   }, [paused, date, state]);
+
   // useEffect(() => {
   //   let timer;
   //   let seconds = '00';
