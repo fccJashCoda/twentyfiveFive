@@ -20,84 +20,19 @@ function Clock(minutes, seconds = '00') {
 const TwentyfiveFive = () => {
   const [breakTime, setBreakTime] = useState(5);
   const [sessionTime, setSessionTime] = useState(25);
-  // const [breakTime, setBreakTime] = useState(3);
-  // const [sessionTime, setSessionTime] = useState(5);
   const [paused, setPaused] = useState(true);
   const [state, setState] = useState('Session');
   const [date, setDate] = useState(new Clock(sessionTime));
-  // const [date, setDate] = useState(new Date(0, 0, 0, 0, 0, 5, 0));
   const [time, setTime] = useState('');
-  // const [time, setTime] = useState('');
-
-  const reset = () => {
-    setBreakTime(5);
-    setSessionTime(25);
-    setPaused(true);
-    setState('Session');
-    setDate((prevState) => {
-      prevState = new Clock(sessionTime);
-      setTime((prevTime) => {
-        prevTime = prevState.display();
-        console.log(prevTime);
-
-        return prevTime;
-      });
-      console.log(prevState);
-      console.log(prevState.display());
-      return prevState;
-    });
-    // setDate((prevState) => {
-    //   prevState = new Date(0, 0, 0, 0, sessionTime, 0);
-
-    //   setTime(
-    //     prevState.toLocaleTimeString(navigator.language, {
-    //       minute: '2-digit',
-    //       second: '2-digit',
-    //     })
-    //   );
-    //   return prevState;
-    // });
-  };
-
-  const startStop = () => {
-    setPaused(!paused);
-  };
-
-  useEffect(() => {
-    // setTime((prevState) => {
-    //   const clock = new Clock(sessionTime);
-    //   return clock;
-    // });
-    // setTime(
-    //   date.toLocaleTimeString(navigator.language, {
-    //     minute: '2-digit',
-    //     second: '2-digit',
-    //   })
-    // );
-  }, []);
 
   useEffect(() => {
     const base = state === 'Session' ? sessionTime : breakTime;
-    console.log('current state when setting time', state);
     setDate((prevState) => {
       prevState = new Clock(base);
-      // prevState = new Date(0, 0, 0, 0, 0, base, 0);
 
       setTime(prevState.display());
       return prevState;
     });
-    // setDate((prevState) => {
-    //   prevState = new Date(0, 0, 0, 0, base, 0);
-    //   // prevState = new Date(0, 0, 0, 0, 0, base, 0);
-
-    //   setTime(
-    //     prevState.toLocaleTimeString(navigator.language, {
-    //       minute: '2-digit',
-    //       second: '2-digit',
-    //     })
-    //   );
-    //   return prevState;
-    // });
   }, [sessionTime, breakTime]);
 
   useEffect(() => {
@@ -107,15 +42,12 @@ const TwentyfiveFive = () => {
       date.tickDown();
 
       setTime((prevState) => {
-        console.log('odal', prevState);
         if (prevState === '00:01') {
-          console.log('switch');
-          // setDate(() => new Date(0, 0, 0, 0, 0, base + 1));
           let base = state === 'Session' ? breakTime : sessionTime;
           setDate(() => new Clock(base, 1));
+          playAudio();
         }
         if (prevState === '00:00') {
-          console.log('0:00 change');
           setState((prev) => (prev === 'Session' ? 'Break' : 'Session'));
         }
         prevState = date.display();
@@ -133,41 +65,43 @@ const TwentyfiveFive = () => {
     }
   }, [paused, date, state]);
 
-  // useEffect(() => {
-  //   let timer;
-  //   let seconds = '00';
+  const reset = () => {
+    resetAudio();
+    setBreakTime((prevState) => (prevState = 5));
+    setSessionTime((prevSessionTime) => {
+      prevSessionTime = 25;
+      setDate((prevState) => {
+        prevState = new Clock(prevSessionTime);
+        setTime((prevTime) => {
+          prevTime = prevState.display();
+          console.log(prevTime);
 
-  //   const countDown = () => {
-  //     seconds = seconds === '00' ? '59' : String(seconds - 1).padStart(2, '0');
-  //     console.log(seconds);
-  //     date.setSeconds(date.getSeconds() - 1);
-  //     setTime((prevState) => {
-  //       if (prevState === '00:01') {
-  //         console.log('switch');
-  //         let base = state === 'Session' ? breakTime : sessionTime;
-  //         // setDate(() => new Date(0, 0, 0, 0, 0, base + 1));
-  //         setDate(() => new Date(0, 0, 0, 0, base, 1));
-  //       }
-  //       if (time === '00:00') {
-  //         setState((prev) => (prev === 'Session' ? 'Break' : 'Session'));
-  //       }
-  //       prevState = date.toLocaleTimeString(navigator.language, {
-  //         minute: '2-digit',
-  //         second: '2-digit',
-  //       });
+          return prevTime;
+        });
+        return prevState;
+      });
 
-  //       return prevState;
-  //     });
-  //   };
+      return prevSessionTime;
+    });
+    setPaused(true);
+    setState('Session');
+  };
 
-  //   if (!paused) {
-  //     timer = setInterval(countDown, 1000);
-  //     return () => {
-  //       console.log('clearing timer');
-  //       clearInterval(timer);
-  //     };
-  //   }
-  // }, [paused, date, state]);
+  const startStop = () => {
+    setPaused(!paused);
+  };
+
+  const playAudio = () => {
+    const audio = document.getElementById('beep');
+    console.log(audio);
+    audio.play();
+  };
+
+  const resetAudio = () => {
+    const audio = document.getElementById('beep');
+    audio.pause();
+    audio.currentTime = 0;
+  };
 
   // button logic
   const increment = (task) => {
@@ -203,6 +137,11 @@ const TwentyfiveFive = () => {
   return (
     <div>
       {paused && <p>paused</p>}
+      <audio
+        src="https://s3.amazonaws.com/freecodecamp/drums/Chord_1.mp3"
+        type="audio/mp3"
+        id="beep"
+      />
       <Timer
         reset={reset}
         startStop={startStop}
