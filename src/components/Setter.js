@@ -10,8 +10,10 @@ const Setter = ({ type, time, increment, decrement }) => {
         task={'increment'}
         action={increment}
       />
-      <h3 id={`${type}-length`}>{time}</h3>
-      <p>{type}</p>
+      <div>
+        <h3 id={`${type}-length`}>{time}</h3>
+        <p>{type}</p>
+      </div>
       <SetterBtn
         id={`${type}-decrement`}
         type={type}

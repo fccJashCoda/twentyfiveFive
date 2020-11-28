@@ -25,6 +25,10 @@ code {
 .App {
   display: flex;
   flex-direction: row;
+
+  @media (max-width: 370px) {
+    display: block;
+  }
 }
 
 #timer-label {
@@ -64,6 +68,10 @@ code {
   }
   #reset {
   }
+
+  @media (max-width: 370px) {
+    margin: 3em;
+  }
 }
 
 .setterWrapper {
@@ -92,6 +100,10 @@ code {
     &:active {
       background: #33335f69;
     }
+  }
+
+  @media (max-width: 370px) {
+    display: flex;
   }
 
   .increment {
